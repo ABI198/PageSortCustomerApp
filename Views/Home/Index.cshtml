@@ -1,0 +1,77 @@
+﻿@model PaginatedCustomerShowModel
+
+@{
+    Layout = "_Layout";
+}
+
+<form asp-controller="Home" asp-action="Index" method="post">
+    <div class="mt-5">
+        <input type="hidden" name="currentPage" value="1" />
+        <select class="form-select w-25 d-inline" name="pageSize">
+            <option selected disabled>Page Size</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+        </select>
+        <select class="form-select w-25 d-inline" name="propertyType">
+            <option selected disabled>Property Type</option>
+            <option value="1">Firstname</option>
+            <option value="2">Lastname</option>
+            <option value="3">Age</option>
+            <option value="4">Gender</option>
+            <option value="5">Total Order Count</option>
+            <option value="6">Marriage Status</option>
+        </select>
+        <select class="form-select w-25 d-inline" name="isAscending">
+            <option value="true">Ascending</option>
+            <option value="false">Descending</option>
+        </select>
+        <button type="submit" class="btn btn-success w-75 d-block">Fetch Data</button>
+    </div>
+</form>
+
+<table class="table table-striped mt-2">
+    <thead>
+        <tr>
+            <th scope="col">Firstname</th>
+            <th scope="col">Lastname</th>
+            <th scope="col">Age</th>
+            <th scope="col">Gender</th>
+            <th scope="col">Total Order Count</th>
+            <th scope="col">Marriage Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var customerShowModel in Model.CustomerShowModelList)
+        {
+            <tr>
+                <td>@customerShowModel.Firstname</td>
+                <td>@customerShowModel.Lastname</td>
+                <td>@customerShowModel.Age</td>
+                <td>@customerShowModel.Gender</td>
+                <td>@customerShowModel.TotalOrderCount</td>
+                <td>@customerShowModel.MarriageStatus</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<ul class="pagination justify-content-center">
+    <li class="page-item @(Model.ShowPrevious ? "" : "disabled")">
+        <a class="page-link" asp-controller="Home" asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-propertyType="@Model.PropertyType" asp-route-isAscending="@Model.IsAscending" asp-route-currentPage="@(Model.ShowPrevious ? (Model.CurrentPage-1) : Model.CurrentPage)">Previous</a>
+    </li>
+    @{
+        for (int i = 1; i <= Model.TotalPages; ++i)
+        {
+            <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                <a class="page-link" asp-controller="Home" asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-propertyType="@Model.PropertyType" asp-route-isAscending="@Model.IsAscending" asp-route-currentPage="@i">@i</a>
+            </li>
+        }
+    }
+    <li class="page-item @(Model.ShowNext ? "" : "disabled")">
+        <a class="page-link" asp-controller="Home" asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-propertyType="@Model.PropertyType" asp-route-isAscending="@Model.IsAscending" asp-route-currentPage="@(Model.ShowNext ? (Model.CurrentPage+1) : Model.CurrentPage)">Next</a>
+    </li>
+</ul>
